@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #95A5A6;
+            color: #ffffff;
+            font-family: 'Roboto Mono', monospace;
+        }
+        .stopwatch {
+            text-align: center;
+            border: 2px solid #ffffff; /* Thin border with white color */
+            border-radius: 80%; /* Make it circular */
+            padding: 20px;
+            width: 400px; /* Adjust width as needed */
+            margin-bottom: 20px;
+        }
+        .circle {
+            border: 2px solid #ffffff; /* Thin border with white color */
+            border-radius: 50%; /* Make it circular */
+            padding: 20px;
+            display: inline-block; /* Adjust display property */
+            margin-bottom: 20px;
+        }
+        .time {
+            font-size: 48px;
+            font-weight: 300;
+        }
+        button {
+            cursor: pointer;
+            background-color: cream; /* Cream-colored box */
+            color: #31394c; /* Text color */
+            padding: 10px 20px; /* Adjust padding as needed */
+            border: 2px solid #ffffff; /* Thin border with white color */
+            margin: 0;
+            outline: none;
+            display: block;
+            margin: 10px auto;
+            border-radius: 5px; /* Rounded corners */
+            font-size: 16px; /* Font size */
+        }
+    </style>
+</head>
+<body>
+    <div class="stopwatch">
+        <h1>Stopwatch</h1>
+        
+            <span class="time" id="display">00:00:00</span>
+        
+        <button id="startButton">Start</button>
+        <button id="stopButton" style="display: none;">Pause</button>
+        <button id="resetButton">Reset</button>
+    </div>
+    <script>
+        let startTime;
+        let elapsedTime;
+        let timerInterval;
+
+        const startButton = document.getElementById("startButton");
+        const stopButton = document.getElementById("stopButton");
+        const resetButton = document.getElementById("resetButton");
+        const display = document.getElementById("display");
+
+        function showButton(buttonToShow, buttonToHide) {
+            buttonToShow.style.display = "block";
+            buttonToHide.style.display = "none";
+        }
+
+        function timeToString(time) {
+            let diffInHrs = time / 3600000;
+            let hh = Math.floor(diffInHrs);
+            let diffInMin = (diffInHrs - hh) * 60;
+            let mm = Math.floor(diffInMin);
+            let diffInSec = (diffInMin - mm) * 60;
+            let ss = Math.floor(diffInSec);
+            let diffInMs = (diffInSec - ss) * 1000;
+            let ms = Math.floor(diffInMs);
+            let formattedHH = hh.toString().padStart(2, "0");
+            let formattedMM = mm.toString().padStart(2, "0");
+            let formattedSS = ss.toString().padStart(2, "0");
+            let formattedMS = ms.toString().padStart(2, "0");
+            return `${formattedHH}:${formattedMM}:${formattedSS}.${formattedMS}`;
+        }
+
+        function start() {
+            startTime = Date.now();
+            timerInterval = setInterval(function printTime() {
+                elapsedTime = Date.now() - startTime;
+                display.innerHTML = timeToString(elapsedTime);
+            }, 10);
+            showButton(stopButton, startButton);
+        }
+
+        function stop() {
+            clearInterval(timerInterval);
+            showButton(startButton, stopButton);
+        }
+
+        function reset() {
+            clearInterval(timerInterval);
+            elapsedTime = 0;
+            display.innerHTML = "00:00:00";
+            showButton(startButton, stopButton);
+        }
+
+        startButton.addEventListener("click", start);
+        stopButton.addEventListener("click", stop);
+        resetButton.addEventListener("click", reset);
+    </script>
+</body>
+</html>
